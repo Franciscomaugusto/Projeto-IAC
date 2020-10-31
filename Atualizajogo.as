@@ -25,4 +25,5 @@ Ciclo:          DEC     R1
                 JMP     Ciclo
 Repair:         POP     R4
                 POP     R7
+                MVI     R3, 0
                 JMP     R7
