@@ -11,14 +11,14 @@ atualizajogo:   PUSH    R7
                 JAL     geracacto
                 MVI     R1, 4100
                 PUSH    R4
-                LOAD    R4, M[R1]; Guardei o valor do e.m em R2 em R4
+                LOAD    R4, M[R1]; Guardei o valor do e.m em R1 em R4
                 STOR    M[R1], R3; Guardei o valor do endereço n em n-1
                 MVI     R2,100
                 DEC     R2; Fiz uma movimentação, logo diminui R3
-Ciclo:          MOV     R1, R
-                DEC     R1        
-                LOAD    R4, M[R1]
-                STOR    M[R], R1
+Ciclo:          DEC     R1
+                MVI     R3, M[R1]
+                STOR    M[R1], R4
+                MOV     R4, R3
                 DEC     R2
                 CMP     R2, R0
                 JMP.Z    Repair
