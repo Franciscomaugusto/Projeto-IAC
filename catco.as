@@ -1,4 +1,4 @@
-                ORIG    4000h ; aumenta isto se quiseres meter a variavel x mais no caralho
+                ORIG    4200h ; aumenta isto se quiseres meter a variavel x mais no caralho
 
 X               WORD    5 ; valor inicial, nao vale a pena mudar
 
