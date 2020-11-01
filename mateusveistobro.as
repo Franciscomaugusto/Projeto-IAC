@@ -1,5 +1,5 @@
 ORIG            4000h
-atualizajogo    TAB     100
+atualizajogo    TAB     80
 
 ORIG            4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
@@ -14,11 +14,11 @@ FIM:            BR      FIM
 ATUALIZA:       PUSH    R7
                 MVI     R2, 4
                 JAL     GeraCacto
-                MVI     R1, 4100h
+                MVI     R1, 404Fh
                 PUSH    R4
                 LOAD    R4, M[R1]; Guardei o valor do e.m em R2 em R4
                 STOR    M[R1], R3; Guardei o valor do endereço n em n-1
-                MVI     R2,100
+                MVI     R2, 80
                 DEC     R2; Fiz uma movimentação, logo diminui R3
 Ciclo:          DEC     R1
                 LOAD    R3, M[R1]
@@ -32,9 +32,9 @@ Repair:         POP     R4
                 POP     R7
                 JMP     R7
                 
-GeraCacto:      MVI     R6, X
-                LOAD    R1, M[R6]
-                MVI     R6, STACKBASE
+GeraCacto:      MVI     R3, X
+                LOAD    R1, M[R3]
+                MOV     R3,R0
                 PUSH    R7
                 PUSH    R5
                 PUSH    R4
