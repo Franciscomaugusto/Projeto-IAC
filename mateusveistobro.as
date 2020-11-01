@@ -6,8 +6,9 @@ X               WORD    5 ; valor inicial, nao vale a pena mudar
 
 STACKBASE       EQU     8000h
                 ORIG    0000h
-                JAL     ATUALIZA
+                MVI     R6, STACKBASE
                 
+                JAL     ATUALIZA
 
 FIM:            BR      FIM
 
@@ -30,7 +31,7 @@ Ciclo:          DEC     R1
                 JMP     Ciclo
 Repair:         POP     R4
                 POP     R7
-                JMP     R7
+                JMP     ATUALIZA
                 
 GeraCacto:      MVI     R3, X
                 LOAD    R1, M[R3]
@@ -50,7 +51,7 @@ GeraCacto:      MVI     R3, X
                 
                 MVI     R5, 62258
                 CMP     R1, R5
-                JAL.N   Funcao
+                JAL.P   Funcao
                 
                 MVI     R5,1
                 SUB     R2,R2,R5
