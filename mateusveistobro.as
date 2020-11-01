@@ -33,9 +33,10 @@ Repair:         POP     R4
                 POP     R7
                 JMP     ATUALIZA
                 
-GeraCacto:      MVI     R3, X
-                LOAD    R1, M[R3]
-                MOV     R3,R0
+GeraCacto:      PUSH    R6
+                MVI     R6, X
+                LOAD    R1, M[R6]
+                POP     R6
                 PUSH    R7
                 PUSH    R5
                 PUSH    R4
