@@ -26,7 +26,7 @@ Ciclo:          DEC     R1
                 MOV     R4, R3
                 DEC     R2
                 CMP     R2, R0
-                JMP.Z    Repair
+                JMP.Z   Repair
                 JMP     Ciclo
 Repair:         POP     R4
                 POP     R7
