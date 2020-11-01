@@ -20,13 +20,13 @@ ATUALIZA:       PUSH    R7
                 STOR    M[R1], R3; Guardei o valor do endereço n em n-1
                 MVI     R2,100
                 DEC     R2; Fiz uma movimentação, logo diminui R3
-Ciclo:          MOV     R1, R
-                DEC     R1        
-                LOAD    R4, M[R1]
-                STOR    M[R], R1
+Ciclo:          DEC     R1
+                LOAD    R3, M[R1]
+                STOR    M[R1], R4
+                MOV     R4, R3
                 DEC     R2
                 CMP     R2, R0
-                JMP.Z   Repair
+                JMP.Z    Repair
                 JMP     Ciclo
 Repair:         POP     R4
                 POP     R7
