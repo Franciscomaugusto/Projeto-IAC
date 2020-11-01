@@ -16,7 +16,7 @@ atualizajogo:   PUSH    R7
                 MVI     R2,100
                 DEC     R2; Fiz uma movimentação, logo diminui R3
 Ciclo:          DEC     R1
-                MVI     R3, M[R1]
+                LOAD     R3, M[R1]
                 STOR    M[R1], R4
                 MOV     R4, R3
                 DEC     R2
