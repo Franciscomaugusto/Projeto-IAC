@@ -3,6 +3,7 @@ atualizajogo    TAB     80
 
 ORIG            4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
+ALTURAMAX       EQU     4
 
 STACKBASE       EQU     8000h
                 ORIG    0000h
@@ -13,7 +14,7 @@ STACKBASE       EQU     8000h
 FIM:            BR      FIM
 
 ATUALIZA:       PUSH    R7
-                MVI     R2, 4
+                MVI     R2, ALTURAMAXIMA
                 JAL     GeraCacto
                 MVI     R1, 404Fh
                 PUSH    R4
