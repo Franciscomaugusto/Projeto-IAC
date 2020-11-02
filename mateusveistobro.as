@@ -52,7 +52,7 @@ GeraCacto:      PUSH    R6
                 
                 MVI     R5, 62258
                 CMP     R1, R5
-                JAL.P   Funcao
+                JAL.N   Funcao
                 
                 MVI     R5,1
                 SUB     R2,R2,R5
