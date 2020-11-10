@@ -14,7 +14,7 @@ STACKBASE       EQU     8000h
 FIM:            BR      FIM
 
 ATUALIZA:       PUSH    R7
-                MVI     R2, ALTURAMAXIMA
+                MVI     R2, ALTURAMAX
                 JAL     GeraCacto
                 MVI     R1, 404Fh
                 PUSH    R4
@@ -51,7 +51,7 @@ GeraCacto:      PUSH    R6
                 CMP     R4,R0
                 JAL.NZ  ChangeBit
                 
-                MVI     R5, 62258
+                MVI     R5, 29491
                 CMP     R1, R5
                 JAL.N   Funcao
                 
