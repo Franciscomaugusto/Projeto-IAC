@@ -1,5 +1,5 @@
 ORIG            4000h
-atualizajogo    TAB     80
+atualiza_jogo   TAB     80
 
 ORIG            4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
@@ -9,15 +9,17 @@ STACKBASE       EQU     8000h
                 ORIG    0000h
                 MVI     R6, STACKBASE
                 
-                JAL     ATUALIZA
+                JAL     atualizajogo
 
 FIM:            BR      FIM
 
-ATUALIZA:       PUSH    R7
+atualizajogo:   DEC     R6
+                STOR    M[R6],R7
                 MVI     R2, ALTURAMAX
-                JAL     GeraCacto
+                JAL     geracacto
                 MVI     R1, 404Fh
-                PUSH    R4
+                DEC     R6
+                STOR    M[R6],R4
                 LOAD    R4, M[R1]; Guardei o valor do e.m em R2 em R4
                 STOR    M[R1], R3; Guardei o valor do endereço n em n-1
                 MVI     R2, 80
@@ -30,11 +32,13 @@ Ciclo:          DEC     R1
                 CMP     R2, R0
                 JMP.Z   Repair
                 JMP     Ciclo
-Repair:         POP     R4
-                POP     R7
-                JMP     ATUALIZA
+Repair:         LOAD    R4,M[R6]
+                INC     R6
+                LOAD    R7,M[R6]
+                INC     R6
+                JMP     atualizajogo
                 
-GeraCacto:      PUSH    R6
+geracacto:      PUSH    R6
                 MVI     R6, X
                 LOAD    R1, M[R6]
                 POP     R6
