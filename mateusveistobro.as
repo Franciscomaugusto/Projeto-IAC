@@ -38,13 +38,18 @@ Repair:         LOAD    R4,M[R6]
                 INC     R6
                 JMP     atualizajogo
                 
-geracacto:      PUSH    R6
+geracacto:      STOR    M[R6], R6
+                DEC     R6
                 MVI     R6, X
                 LOAD    R1, M[R6]
-                POP     R6
-                PUSH    R7
-                PUSH    R5
-                PUSH    R4
+                INC     R6
+                LOAD    R6, M[R6]
+                STOR    M[R6], R7
+                DEC     R6
+                STOR    M[R6], R5
+                DEC     R6
+                STOR    M[R6], R4
+                DEC     R6
                 MVI     R5,1
                 AND     R4, R1, R5
                 SHR     R1
@@ -64,9 +69,12 @@ geracacto:      PUSH    R6
                 AND     R2,R1,R2
                 ADD     R3,R2,R5
                 
-                POP     R4
-                POP     R5
-                POP     R7
+                INC     R6
+                LOAD    R4, M[R6]
+                INC     R6
+                LOAD    R5, M[R6]
+                INC     R6
+                LOAD    R7, M[R6]
                 
                 JMP     R7
 
@@ -78,7 +86,10 @@ ChangeBit:      MVI     R5, b400h
                 JMP     R7
 
 Funcao:         MOV     R3, R0
-                POP     R4
-                POP     R5
-                POP     R7
+                INC     R6
+                LOAD    R4, M[R6]
+                INC     R6
+                LOAD    R5, M[R6]
+                INC     R6
+                LOAD    R7, M[R6]
                 JMP     R7
