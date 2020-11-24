@@ -21,4 +21,4 @@ Repair:         LOAD    R4,M[R6]
                 INC     R6
                 LOAD    R7,M[R6]
                 INC     R6
-                JMP     atualizajogo
+                JMP     R7
