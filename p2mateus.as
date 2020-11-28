@@ -44,6 +44,9 @@ atualizajogotab TAB     80
 X               WORD    5 ; valor inicial, nao vale a pena mudar
 ALTURAMAX       EQU     4
 
+                ;mete as tuas variaveis aqui em baixo
+
+
 ;=================================================================
 ; MAIN: the starting point of your program
 ;-----------------------------------------------------------------
@@ -97,6 +100,9 @@ PROCESS_TIMER_EVENT:
                 LOAD    R2,M[R1]
                 INC     R2
                 STOR    M[R1],R2
+                
+                ; falta converter para decimal - Mateus
+               
                 ; SHOW TIME ON DISP7_D0
                 MVI     R3,fh
                 AND     R3,R2,R3
@@ -155,6 +161,7 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 INC     R1
                 STOR    M[R2],R1
                 
+                ; salto para atualizajogo, tem que ser feito aqui, idk why
                 PUSH    R6
                 PUSH    R1
                 PUSH    R7
@@ -198,7 +205,7 @@ AUX_KEYUPDOWN:  ; SAVE CONTEXT
                 JMP     R7
 
 ;*****************************************************************
-; INTERRUPT SERVICE ROUTINES
+; atualizajogo e geracacto
 ;*****************************************************************
 atualizajogo:   PUSH    R7
                 PUSH    R1
