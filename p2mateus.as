@@ -26,7 +26,7 @@ TIMERCOUNT_MIN  EQU     1
 TIMERCOUNT_INIT EQU     1
 ; interruptions
 INT_MASK        EQU     FFFAh
-INT_MASK_VAL    EQU     80FFh ; 1000 0000 0001 1010 b
+INT_MASK_VAL    EQU     FFFFh ; 1000 0000 0001 1010 b
 
 ;=================================================================
 ; Program global variables
@@ -174,7 +174,6 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 MVI     R1, 1
                 CMP     R3,R1
                 BR.NZ   passa
-                JAL     perdeu
 passa:          POP     R3
                 POP     R7
                 POP     R2
@@ -266,18 +265,18 @@ REALIZA_SALTO:  MVI     R1,ALTURA
                 BR.Z    .desce
                 MOV     R2, R0
                 CMP     R1,R2
-                BR.Z    chao
-realizacao:     MVI     R2, SALTO
+                BR.Z    .chao
+.realizacao:     MVI     R2, SALTO
                 MVI     R1,ALTURA
                 ADD     R1,R1,R2
                 JMP     R7
 .desce:         MVI     R1,SALTO
                 MVI     R2, -1
                 STOR    M[R1],R2
-                BR      realizacao
+                BR      .realizacao
 .chao:          MVI     R1,SALTO
                 STOR    M[R1],R0
-                BR      realizacao
+                BR      .realizacao
                 
                 
 derrota:        MVI   R1, ALTURA
@@ -286,18 +285,18 @@ derrota:        MVI   R1, ALTURA
                 BR.N  .perdeu
                 MOV   R3,R0
                 JMP   R7
-.perdeu:        MVI   R3
+.perdeu:        MVI   R3, 1
                 JMP   R7
+ 
                 
-                
-perdeu:         MVI   R1, TERM_CURSOR
-                MVI   R2,FFFFh
-                STOR  M[R1], R2
-                JMP   
-                
-SALTO:          MVI R1, SALTO
-                STOR M[R1], 1
-                JMP R7
+Salto:          DEC     R6
+                STOR    M[R6],R3
+                MVI     R1, SALTO
+                MVI     R2, 1
+                STOR    M[R1], R2
+                LOAD    R3,M[R6]
+                INC     R6
+                JMP     R7
                 
 
 ;*****************************************************************
@@ -322,9 +321,9 @@ KEYUP:          ; SAVE CONTEXT
                 STOR    M[R6],R7
                 ; CALL AUXILIARY FUNCTION
                 MVI     R1,ALTURA
-                CMP R1,R0
+                CMP     R1,R0
                 BR.NZ   .NAOSALTO
-                JAL SALTO
+                JAL Salto
                 ; RESTORE CONTEXT
 .NAOSALTO:      LOAD    R7,M[R6]
                 INC     R6
