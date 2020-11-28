@@ -42,10 +42,11 @@ atualizajogotab TAB     80
 
                 ORIG    4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
-ALTURAMAX       EQU     4
+ALTURAMAX       EQU     6
 
                 ;mete as tuas variaveis aqui em baixo
-
+ALTURA          WORD    0
+SALTO           WORD    0
 
 ;=================================================================
 ; MAIN: the starting point of your program
@@ -164,9 +165,19 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 ; salto para atualizajogo, tem que ser feito aqui, idk why
                 PUSH    R6
                 PUSH    R1
+                PUSH    R2
                 PUSH    R7
+                JAL     REALIZA_SALTO
                 JAL     atualizajogo
+                PUSH    R3
+                JAL     derrota
+                MVI     R1, 1
+                CMP     R3,R1
+                BR.NZ   passa
+                JAL     perdeu
+passa:          POP     R3
                 POP     R7
+                POP     R2
                 POP     R1
                 POP     R6
                 
@@ -174,33 +185,6 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 LOAD    R2,M[R6]
                 INC     R6
                 LOAD    R1,M[R6]
-                INC     R6
-                JMP     R7
-
-AUX_KEYUPDOWN:  ; SAVE CONTEXT
-                DEC     R6
-                STOR    M[R6],R2
-                DEC     R6
-                STOR    M[R6],R3
-                ; INCREMENT/DECREMENT BASED ON R1
-                MVI     R2,TIMER_COUNTVAL
-                LOAD    R3,M[R2]
-                CMP     R1,R0
-                BR.NZ   .KEYUP
-.KEYDOWN:       MVI     R1,TIMERCOUNT_MAX
-                CMP     R1,R3
-                BR.Z    .SKIPANDEXIT
-                INC     R3
-                BR      .SAVEANDEXIT
-.KEYUP:         MVI     R1,TIMERCOUNT_MIN
-                CMP     R1,R3
-                BR.Z    .SKIPANDEXIT
-                DEC     R3
-.SAVEANDEXIT:   STOR    M[R2],R3
-                ; RESTORE CONTEXT
-.SKIPANDEXIT:   LOAD    R3,M[R6]
-                INC     R6
-                LOAD    R2,M[R6]
                 INC     R6
                 JMP     R7
 
@@ -274,6 +258,47 @@ geracacto:      PUSH    R3
                 POP     R5
                 POP     R7
                 JMP     R7
+                
+                
+REALIZA_SALTO:  MVI     R1,ALTURA
+                MVI     R2,ALTURAMAX
+                CMP     R2,R1
+                BR.Z    .desce
+                MOV     R2, R0
+                CMP     R1,R2
+                BR.Z    chao
+realizacao:     MVI     R2, SALTO
+                MVI     R1,ALTURA
+                ADD     R1,R1,R2
+                JMP     R7
+.desce:         MVI     R1,SALTO
+                MVI     R2, -1
+                STOR    M[R1],R2
+                BR      realizacao
+.chao:          MVI     R1,SALTO
+                STOR    M[R1],R0
+                BR      realizacao
+                
+                
+derrota:        MVI   R1, ALTURA
+                MVI   R2, atualizajogo
+                CMP   R1,R2
+                BR.N  .perdeu
+                MOV   R3,R0
+                JMP   R7
+.perdeu:        MVI   R3
+                JMP   R7
+                
+                
+perdeu:         MVI   R1, TERM_CURSOR
+                MVI   R2,FFFFh
+                STOR  M[R1], R2
+                JMP   
+                
+SALTO:          MVI R1, SALTO
+                STOR M[R1], 1
+                JMP R7
+                
 
 ;*****************************************************************
 ; INTERRUPT SERVICE ROUTINES
@@ -289,24 +314,6 @@ TIMER_ISR:      ; SAVE CONTEXT
                 INC     R6
                 RTI
 
-                ORIG    7F00h
-KEYZERO:         ; SAVE CONTEXT
-                DEC     R6
-                STOR    M[R6],R1
-                DEC     R6
-                STOR    M[R6],R2
-                ; INC TIMER FLAG
-                MVI     R2,TIMER_TICK
-                LOAD    R1,M[R2]
-                INC     R1
-                STOR    M[R2],R1
-                ; RESTORE CONTEXT
-                LOAD    R2,M[R6]
-                INC     R6
-                LOAD    R1,M[R6]
-                INC     R6
-                RTI
-
                 ORIG    7F30h
 KEYUP:          ; SAVE CONTEXT
                 DEC     R6
@@ -314,10 +321,12 @@ KEYUP:          ; SAVE CONTEXT
                 DEC     R6
                 STOR    M[R6],R7
                 ; CALL AUXILIARY FUNCTION
-                MVI     R1,1
-                JAL     AUX_KEYUPDOWN
+                MVI     R1,ALTURA
+                CMP R1,R0
+                BR.NZ   .NAOSALTO
+                JAL SALTO
                 ; RESTORE CONTEXT
-                LOAD    R7,M[R6]
+.NAOSALTO:      LOAD    R7,M[R6]
                 INC     R6
                 LOAD    R1,M[R6]
                 INC     R6
