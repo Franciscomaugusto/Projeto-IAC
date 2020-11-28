@@ -42,8 +42,9 @@ atualizajogotab TAB     80
 
                 ORIG    4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
-ALTURAMAX       EQU     6
-
+ALTURAMAX       EQU     4
+                
+                ORIG    5000h
                 ;mete as tuas variaveis aqui em baixo
 ALTURA          WORD    0
 SALTO           WORD    0
@@ -279,14 +280,14 @@ REALIZA_SALTO:  MVI     R1,ALTURA
                 BR      .realizacao
                 
                 
-derrota:        MVI   R1, ALTURA
-                MVI   R2, atualizajogo
-                CMP   R1,R2
-                BR.N  .perdeu
-                MOV   R3,R0
-                JMP   R7
-.perdeu:        MVI   R3, 1
-                JMP   R7
+derrota:        MVI     R1, ALTURA
+                MVI     R2, atualizajogo
+                CMP     R1,R2
+                BR.N    .perdeu
+                MOV     R3,R0
+                JMP     R7
+.perdeu:        MVI     R3, 1
+                JMP     R7
  
                 
 Salto:          DEC     R6
@@ -323,7 +324,7 @@ KEYUP:          ; SAVE CONTEXT
                 MVI     R1,ALTURA
                 CMP     R1,R0
                 BR.NZ   .NAOSALTO
-                JAL Salto
+                JAL     Salto
                 ; RESTORE CONTEXT
 .NAOSALTO:      LOAD    R7,M[R6]
                 INC     R6
