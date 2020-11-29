@@ -26,7 +26,7 @@ TIMERCOUNT_MIN  EQU     1
 TIMERCOUNT_INIT EQU     1
 ; interruptions
 INT_MASK        EQU     FFFAh
-INT_MASK_VAL    EQU     FFFFh ; 1000 0000 0001 1010 b
+INT_MASK_VAL    EQU     FFFFh
 
 ;=================================================================
 ; Program global variables
@@ -42,9 +42,9 @@ atualizajogotab TAB     80
 
                 ORIG    4200h
 X               WORD    5 ; valor inicial, nao vale a pena mudar
-ALTURAMAX       EQU     4
-                
-                ORIG    5000h
+ALTURAMAX       EQU     6
+ALTURACACTO     EQU     4
+
                 ;mete as tuas variaveis aqui em baixo
 ALTURA          WORD    0
 SALTO           WORD    0
@@ -193,7 +193,7 @@ passa:          POP     R3
 ;*****************************************************************
 atualizajogo:   PUSH    R7
                 PUSH    R1
-                MVI     R2, ALTURAMAX
+                MVI     R2, ALTURACACTO
                 JAL     geracacto
                 MVI     R1, 404Fh
                 PUSH    R4
@@ -260,34 +260,42 @@ geracacto:      PUSH    R3
                 JMP     R7
                 
                 
-REALIZA_SALTO:  MVI     R1,ALTURA
+REALIZA_SALTO:  DEC     R6
+                STOR    M[R6], R4
+                MVI     R1,ALTURA
+                LOAD    R4, M[R1]
                 MVI     R2,ALTURAMAX
-                CMP     R2,R1
+                CMP     R2,R4
                 BR.Z    .desce
                 MOV     R2, R0
-                CMP     R1,R2
+                CMP     R4,R2
                 BR.Z    .chao
-.realizacao:     MVI     R2, SALTO
-                MVI     R1,ALTURA
-                ADD     R1,R1,R2
+.realizacao:    MVI     R1, SALTO
+                LOAD    R2, M[R1]
+                ADD     R4,R4,R2
+                MVI     R1, ALTURA
+                STOR    M[R1],R4 
+                POP     R4
                 JMP     R7
 .desce:         MVI     R1,SALTO
                 MVI     R2, -1
                 STOR    M[R1],R2
                 BR      .realizacao
 .chao:          MVI     R1,SALTO
+                CMP     R0,R1
+                BR.N    .realizacao
                 STOR    M[R1],R0
                 BR      .realizacao
                 
                 
-derrota:        MVI     R1, ALTURA
-                MVI     R2, atualizajogo
-                CMP     R1,R2
-                BR.N    .perdeu
-                MOV     R3,R0
-                JMP     R7
-.perdeu:        MVI     R3, 1
-                JMP     R7
+derrota:        MVI   R1, ALTURA
+                MVI   R2, atualizajogo
+                CMP   R1,R2
+                BR.N  .perdeu
+                MOV   R3,R0
+                JMP   R7
+.perdeu:        MVI   R3, 1
+                JMP   R7
  
                 
 Salto:          DEC     R6
@@ -320,13 +328,10 @@ KEYUP:          ; SAVE CONTEXT
                 STOR    M[R6],R1
                 DEC     R6
                 STOR    M[R6],R7
-                ; CALL AUXILIARY FUNCTION
-                MVI     R1,ALTURA
-                CMP     R1,R0
-                BR.NZ   .NAOSALTO
+                
                 JAL     Salto
                 ; RESTORE CONTEXT
-.NAOSALTO:      LOAD    R7,M[R6]
+                LOAD    R7,M[R6]
                 INC     R6
                 LOAD    R1,M[R6]
                 INC     R6
