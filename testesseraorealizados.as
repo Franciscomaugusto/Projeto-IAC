@@ -122,6 +122,15 @@ GRAFICO_CACTOS: ;GO GO GO
                 MVI     R4, atualizajogotab
                 DEC     R4
                 MVI     R1,TERM_CURSOR
+                MVI     R2, 1D00h
+                STOR    M[R1],R2
+                PUSH    R7
+                JAL     .LOOP5
+                POP     R7
+                
+                MVI     R4, atualizajogotab
+                DEC     R4
+                MVI     R1,TERM_CURSOR
                 MVI     R2, 1E00h
                 STOR    M[R1],R2
                 PUSH    R7
@@ -161,6 +170,26 @@ GRAFICO_CACTOS: ;GO GO GO
                 POP     R1
                 JMP     R7
 
+.LOOP5:         INC     R4
+                MVI     R1,404FH
+                CMP     R4,R1
+                JMP.Z   R7
+                
+                LOAD    R5,M[R4]
+                MVI     R1,5
+                CMP     R5,R1
+                BR.NP   .SMALL5
+                
+                MVI     R1,TERM_WRITE
+                MVI     R2,'*'
+                STOR    M[R1],R2
+                BR      .LOOP5
+
+.SMALL5:        MVI     R1,TERM_WRITE
+                MVI     R2,' '
+                STOR    M[R1],R2
+                BR      .LOOP5
+
 .LOOP4:         INC     R4
                 MVI     R1,404FH
                 CMP     R4,R1
@@ -169,7 +198,7 @@ GRAFICO_CACTOS: ;GO GO GO
                 LOAD    R5,M[R4]
                 MVI     R1,4
                 CMP     R5,R1
-                BR.NZ   .SMALL4
+                BR.NP   .SMALL4
                 
                 MVI     R1,TERM_WRITE
                 MVI     R2,'*'
@@ -189,14 +218,14 @@ GRAFICO_CACTOS: ;GO GO GO
                 LOAD    R5,M[R4]
                 MVI     R1,3
                 CMP     R5,R1
-                BR.NZ   .SMALL3
+                BR.NP   .SMALL3
                 
                 MVI     R1,TERM_WRITE
                 MVI     R2,'*'
                 STOR    M[R1],R2
                 BR      .LOOP3
 
-.SMALL3:        MVI     R1,TERM_WRITE
+.SMALL3:         MVI     R1,TERM_WRITE
                 MVI     R2,' '
                 STOR    M[R1],R2
                 BR      .LOOP3
@@ -209,7 +238,7 @@ GRAFICO_CACTOS: ;GO GO GO
                 LOAD    R5,M[R4]
                 MVI     R1,2
                 CMP     R5,R1
-                BR.NZ   .SMALL2
+                BR.NP   .SMALL2
                 
                 MVI     R1,TERM_WRITE
                 MVI     R2,'*'
@@ -229,7 +258,7 @@ GRAFICO_CACTOS: ;GO GO GO
                 LOAD    R5,M[R4]
                 MVI     R1,1
                 CMP     R5,R1
-                BR.NZ   .SMALL1
+                BR.NP   .SMALL1
                 
                 MVI     R1,TERM_WRITE
                 MVI     R2,'*'
