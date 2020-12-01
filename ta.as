@@ -623,14 +623,10 @@ perdeu:         DEC     R6
                 STOR    M[R6],R2
                 DEC     R6
                 STOR    M[R6],R7
-                MVI     R1, TERM_CURSOR
-                MVI     R2, FFFFh
-                STOR    M[R1],R2
-                ;escrever GAME OVER, mas isso acho melhor fazer primeiro o ecrã
-                MVI     R1, ALTURA
-                STOR    M[R1],R0
-                MVI     R1, SALTO
-                STOR    M[R1], R0
+                DEC     R6
+                STOR    M[R6],R3
+                DEC     R6
+                STOR    M[R6],R4
                 JAL     resetatualiza
                 MVI     R1,RECOMECO
                 MVI     R2,1
@@ -638,6 +634,62 @@ perdeu:         DEC     R6
                 MVI     R1, INT_MASK
                 MVI     R2,7FFFh
                 STOR    M[R1],R2
+                MVI     R1, TERM_CURSOR
+                MVI     R2, FFFFh
+                STOR    M[R1],R2
+                MVI     R2,1C1Ch
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'G'
+                STOR    M[R3],R4
+                MVI     R2,1C1Dh
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'A'
+                STOR    M[R3],R4
+                MVI     R2,1C1Eh
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'M'
+                STOR    M[R3],R4
+                MVI     R2,1C1Fh
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'E'
+                STOR    M[R3],R4
+                MVI     R2,1C20h
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'_'
+                STOR    M[R3],R4
+                MVI     R2,1C21h
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'O'
+                STOR    M[R3],R4
+                MVI     R2,1C22h
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'V'
+                STOR    M[R3],R4
+                MVI     R2,1C23h
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'E'
+                STOR    M[R3],R4
+                MVI     R2,1C24h
+                STOR    M[R1],R2
+                MVI     R3,TERM_WRITE
+                MVI     R4,'R'
+                STOR    M[R3],R4
+                MVI     R1, ALTURA
+                STOR    M[R1],R0
+                MVI     R1, SALTO
+                STOR    M[R1], R0
+                LOAD    R4,M[R6]
+                INC     R6
+                LOAD    R3,M[R6]
+                INC     R6
                 LOAD    R7,M[R6]
                 INC     R6
                 LOAD    R2,M[R6]
