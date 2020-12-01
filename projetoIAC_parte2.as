@@ -759,6 +759,10 @@ KEYZERO:         ; SAVE CONTEXT
                 CMP     R2,R0
                 BR.Z    .naomuda
                 STOR    M[R1],R0
+                MVI     R1,TERM_CURSOR
+                MVI     R2,FFFFh
+                STOR    M[R1],R2
+                MOV     R2,R0
                 MVI     R1, MAIN
                 JMP     R1
                 ; RESTORE CONTEXT
