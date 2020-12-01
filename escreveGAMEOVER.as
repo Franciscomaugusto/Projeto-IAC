@@ -637,47 +637,47 @@ perdeu:         DEC     R6
                 MVI     R1, TERM_CURSOR
                 MVI     R2, FFFFh
                 STOR    M[R1],R2
-                MVI     R2,1C1Ch
+                MVI     R2,1024h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'G'
                 STOR    M[R3],R4
-                MVI     R2,1C1Dh
+                MVI     R2,1025h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'A'
                 STOR    M[R3],R4
-                MVI     R2,1C1Eh
+                MVI     R2,1026h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'M'
                 STOR    M[R3],R4
-                MVI     R2,1C1Fh
+                MVI     R2,1027h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'E'
                 STOR    M[R3],R4
-                MVI     R2,1C20h
+                MVI     R2,1028h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'_'
                 STOR    M[R3],R4
-                MVI     R2,1C21h
+                MVI     R2,1029h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'O'
                 STOR    M[R3],R4
-                MVI     R2,1C22h
+                MVI     R2,102Ah
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'V'
                 STOR    M[R3],R4
-                MVI     R2,1C23h
+                MVI     R2,102Bh
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'E'
                 STOR    M[R3],R4
-                MVI     R2,1C24h
+                MVI     R2,102Ch
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
                 MVI     R4,'R'
