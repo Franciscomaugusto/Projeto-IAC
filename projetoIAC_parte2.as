@@ -123,7 +123,7 @@ LIMPA_FRANCISCO:   ;GO GO GO
                 MVI     R4, 881
                 
                 MVI     R1,TERM_CURSOR
-                MVI     R2, 1200H
+                MVI     R2, 1300H
                 STOR    M[R1],R2
                 
 .LOOP:          DEC     R4
@@ -287,38 +287,62 @@ PROCESS_TIMER_EVENT:
                 STOR    M[R1],R2
                 
                 ; falta converter para decimal - Mateus
-               
-                MVI     R3,fh
-                AND     R3,R2,R3
-                MVI     R1,DISP7_D0
+                
+                MVI     R1,10000
+                PUSH    R7
+                JAL     DIVINT
+                POP     R7
+                MVI     R1, DISP7_D4
                 STOR    M[R1],R3
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                MVI     R3,fh
-                AND     R3,R2,R3
-                MVI     R1,DISP7_D1
+                
+                MOV     R1,1000
+                PUSH    R7
+                JAL     DIVINT
+                POP     R7
+                MVI     R1, DISP7_D3
                 STOR    M[R1],R3
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                MVI     R3,fh
-                AND     R3,R2,R3
-                MVI     R1,DISP7_D2
+                
+                MVI     R1,100
+                PUSH    R7
+                JAL     DIVINT
+                POP     R7
+                MVI     R1, DISP7_D2
                 STOR    M[R1],R3
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                SHR     R2
-                MVI     R3,fh
-                AND     R3,R2,R3
-                MVI     R1,DISP7_D3
+                
+                MVI     R1,10
+                PUSH    R7
+                JAL     DIVINT
+                POP     R7
+                MVI     R1, DISP7_D1
                 STOR    M[R1],R3
+                
+                MVI     R1, DISP7_D0
+                STOR    M[R1],R2
                 
                 JMP     R7
 
+
+
+;def div_int(n, d):
+;    cnt = 0
+;    while n >= d:
+;        cnt += 1
+;        n -= d
+;    # neste momento n é o resto. no P4 talvez
+;    # seja melhor retorna-lo tambem pela pilha
+;    # em vez de implementar a função resto
+;    return cnt
+
+
+DIVINT:         ;r1 = d, r2 = n
+                MOV     R3,R0
+.WHILE:         CMP     R2,R1
+                BR.N    .RETURN
+                INC     R3
+                SUB     R2,R2,R1
+                BR      .WHILE
+
+.RETURN:        JMP     R7
 
 ;*****************************************************************
 ; AUXILIARY INTERRUPT SERVICE ROUTINES
@@ -419,9 +443,9 @@ geracacto:      PUSH    R3
                 CMP     R4,R0
                 JAL.NZ  .ChangeBit
                 
-                MVI     R5, 29491
+                MVI     R5, 63569
                 CMP     R1, R5
-                JAL.N   .Funcao
+                JAL.C   .Funcao
                 
                 MVI     R5,1
                 SUB     R2,R2,R5
@@ -631,7 +655,7 @@ perdeu:         DEC     R6
                 MVI     R2,1028h
                 STOR    M[R1],R2
                 MVI     R3,TERM_WRITE
-                MVI     R4,'_'
+                MVI     R4,' '
                 STOR    M[R3],R4
                 MVI     R2,1029h
                 STOR    M[R1],R2
