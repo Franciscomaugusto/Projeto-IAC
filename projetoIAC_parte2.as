@@ -1,13 +1,13 @@
 ;=================================================================
-; CONSTANTS
+; CONSTANTES
 ;-----------------------------------------------------------------
-; Text window
+; JANELA DE TEXTO
 TERM_READ       EQU     FFFFh
 TERM_WRITE      EQU     FFFEh
 TERM_STATUS     EQU     FFFDh
 TERM_CURSOR     EQU     FFFCh
 TERM_COLOR      EQU     FFFBh
-; 7 segment display
+; DISPLAY
 DISP7_D0        EQU     FFF0h
 DISP7_D1        EQU     FFF1h
 DISP7_D2        EQU     FFF2h
@@ -24,12 +24,12 @@ TIMER_SETSTOP   EQU     0
 TIMERCOUNT_MAX  EQU     20
 TIMERCOUNT_MIN  EQU     1
 TIMERCOUNT_INIT EQU     1
-; interruptions
+; INTERRUPÇOES
 INT_MASK        EQU     FFFAh
 INT_MASK_VAL    EQU     FFFFh
 
 ;=================================================================
-; Program global variables
+; VARIAVEIS GLOBAIS
 ;-----------------------------------------------------------------
                 ORIG    0
 TIMER_COUNTVAL  WORD    TIMERCOUNT_INIT ;states the current counting period
@@ -52,7 +52,7 @@ RECOMECO        WORD    0
 COMECO          WORD    1
 
 ;=================================================================
-; MAIN: the starting point of your program
+; MAIN
 ;-----------------------------------------------------------------
                 ORIG    0
 WAIT:           MVI     R6,SP_INIT
@@ -121,10 +121,9 @@ GRAFICO_CHAO:   ;GO GO GO
                 JMP     R7
                 
 ;========================================================================
-; LIMPA_FRANCISCO: FRANCISCO PORCO
+; LIMPA: 
 ;------------------------------------------------------------------------
-LIMPA_FRANCISCO:   ;GO GO GO
-                PUSH    R1
+LIMPA:          PUSH    R1
                 PUSH    R2
                 PUSH    R4
                 
@@ -278,12 +277,12 @@ GRAFICO_CACTOS: ;GO GO GO
                 BR      .LOOP1
                 
 ;=================================================================
-; PROCESS_TIMER_EVENT: processes events from the timer
+; PROCESS_TIMER_EVENT:
 ;-----------------------------------------------------------------
 PROCESS_TIMER_EVENT:
                 ; DEC TIMER_TICK
                 MVI     R2,TIMER_TICK
-                DSI     ; critical region: if an interruption occurs, value might become wrong
+                DSI     
                 LOAD    R1,M[R2]
                 DEC     R1
                 STOR    M[R2],R1
@@ -294,7 +293,6 @@ PROCESS_TIMER_EVENT:
                 INC     R2
                 STOR    M[R1],R2
                 
-                ; falta converter para decimal - Mateus
                 
                 MVI     R1,10000
                 PUSH    R7
@@ -330,18 +328,6 @@ PROCESS_TIMER_EVENT:
                 JMP     R7
 
 
-
-;def div_int(n, d):
-;    cnt = 0
-;    while n >= d:
-;        cnt += 1
-;        n -= d
-;    # neste momento n é o resto. no P4 talvez
-;    # seja melhor retorna-lo tambem pela pilha
-;    # em vez de implementar a função resto
-;    return cnt
-
-
 DIVINT:         ;r1 = d, r2 = n
                 MOV     R3,R0
 .WHILE:         CMP     R2,R1
@@ -373,8 +359,7 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 LOAD    R1,M[R2]
                 INC     R1
                 STOR    M[R2],R1
-                
-                ; salto para atualizajogo, tem que ser feito aqui, idk why
+
                 PUSH    R6
                 PUSH    R1
                 PUSH    R2
@@ -389,7 +374,7 @@ AUX_TIMER_ISR:  ; SAVE CONTEXT
                 JAL     atualizajogo;atualiza o jogo
                 JAL     GRAFICO_CACTOS
                 JAL     avaliaaltura;avalia a altura do dinossauro
-                JAL     LIMPA_FRANCISCO
+                JAL     LIMPA
                 JAL     geradino;gera o dinossauro
                 PUSH    R3
                 JAL     derrota;verifica se houve derrota
@@ -481,7 +466,9 @@ geracacto:      PUSH    R3
                 
 
 ;***************************************************
-;Para realizacao de saltos
+;VAI AUMENTANDO A ALTURA ATE ATINGIR A ALTURA MAXIMA
+;DEPOIS MUDA O VALOR DE SALTO PARA -1, ATÉ ATINGIR A ALTURA
+;0, MUDANDO O VALOR DO SALTO PARA 0
 ;*************************************************
 REALIZA_SALTO:  DEC     R6
                 STOR    M[R6], R4
@@ -591,8 +578,10 @@ geradino:       MVI     R1,TERM_CURSOR
                 MVI     R1,'Γ'
                 STOR    M[R3],R1
                 
-;**************************************************
-;Confirmacao de derrotas
+;*************************************************
+;Confirmacao de derrotas- FAZNDO A SUBTRAÇÃO DO VALOR
+;DA ALTURA PARA E DO VALOR DO CACTO NA PRIMEIRA POSIÇÃO
+;SE DER NEGATIVO RETORNA O VALOR 1 EM R3
 ;***************************************************
 derrota:        DEC     R6
                 STOR    M[R6],R4
@@ -618,7 +607,9 @@ derrota:        DEC     R6
                 JMP     R7
                 
 ;***************************************************
-;Se derrota for True fazer reset a tudo
+;perdeu- SE O RETORNO DE derrota FOR 1, LIMPA O ECRÃ
+; ESCREVE GAME OVER NO ECRÃ, FAZ RESET A TODAS AS VARIAVEIS DE JOGO
+; ,CHAMA A FUNÇÃO LIMPA E MUDA O VALOR DE RECOMECO PARA 1
 ;***************************************************
 perdeu:         DEC     R6
                 STOR    M[R6],R1
@@ -702,7 +693,7 @@ perdeu:         DEC     R6
                 JMP     R7
 
 ;**************************************************
-;Faz reset da atualiza jogo em caso de derrota
+;Faz reset da atualizajogotab
 ;**************************************************
 resetatualiza:  DEC     R6
                 STOR    M[R6],R7
@@ -721,7 +712,7 @@ resetatualiza:  DEC     R6
                 INC     R6
                 JMP     R7
 ;********************************************
-;Inicia o salto
+;MUDA O VALOR DE SALTO PARA 1
 ;********************************************
 Salto:          DEC     R6
                 STOR    M[R6],R3
@@ -749,7 +740,8 @@ TIMER_ISR:      ; SAVE CONTEXT
 
 
 ;**************************************************
-;Caso nao esteja em salto comeca um salto
+;CASO O  VALOR DE RECOMECO SEJA 0, E A ALTURA SEJA 0
+; CHAMA A FUNÇÃO SALTO
 ;**************************************************
                 ORIG    7F30h
 KEYUP:          ; SAVE CONTEXT
@@ -779,8 +771,9 @@ KEYUP:          ; SAVE CONTEXT
                 
                 
 ;**********************************************
-;Altera o valor de Recomeco e faz jmp para o MAIN, recomecando o jogo
-;***********************************************
+;ALTERA O VALOR DE RECOMECO PARA 0, LIMAP O ECRA 
+;E FAZ JMP PARA O MAIN, RECOMEÇANDO O JOGO
+;**********************************************
                 ORIG    7F00h
 KEYZERO:         ; SAVE CONTEXT
                 DEC     R6
