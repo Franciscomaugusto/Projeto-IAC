@@ -49,11 +49,19 @@ ALTURACACTO     EQU     4
 ALTURA          WORD    0
 SALTO           WORD    0
 RECOMECO        WORD    0
+COMECO          WORD    1
 
 ;=================================================================
 ; MAIN: the starting point of your program
 ;-----------------------------------------------------------------
                 ORIG    0
+WAIT:           MVI     R6,SP_INIT
+                MVI     R1,INT_MASK
+                MVI     R2,INT_MASK_VAL
+                STOR    M[R1],R2
+                ; enable interruptions
+                ENI
+                BR      WAIT
 MAIN:           MVI     R6,SP_INIT
                 MVI     R1,INT_MASK
                 MVI     R2,INT_MASK_VAL
@@ -778,11 +786,15 @@ KEYZERO:         ; SAVE CONTEXT
                 DEC     R6
                 STOR    M[R6],R1
                 ; INC TIMER FLAG
+                MVI     R1,COMECO
+                LOAD    R2, M[R1]
+                CMP     R2,R0
+                BR.NZ   .Primeiro
                 MVI     R1,RECOMECO
                 LOAD    R2, M[R1]
                 CMP     R2,R0
                 BR.Z    .naomuda
-                STOR    M[R1],R0
+.Primeiro:      STOR    M[R1],R0
                 MVI     R1,TERM_CURSOR
                 MVI     R2,FFFFh
                 STOR    M[R1],R2
@@ -793,3 +805,4 @@ KEYZERO:         ; SAVE CONTEXT
 .naomuda:       LOAD    R1,M[R6]
                 INC     R6
                 RTI
+                
