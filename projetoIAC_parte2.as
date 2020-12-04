@@ -41,15 +41,16 @@ TIME            WORD    0               ; time elapsed
 atualizajogotab TAB     80
 
                 ORIG    4200h
-X               WORD    5 ; valor inicial, nao vale a pena mudar
+X               WORD    5
 ALTURAMAX       EQU     6
 ALTURACACTO     EQU     4
-
-                ;mete as tuas variaveis aqui em baixo
-ALTURA          WORD    0
-SALTO           WORD    0
 RECOMECO        WORD    0
 COMECO          WORD    1
+;*******************************************************************
+;VARIÁVEIS DE JOGO
+;*********************************************************************
+ALTURA          WORD    0
+SALTO           WORD    0
 
 ;=================================================================
 ; MAIN
