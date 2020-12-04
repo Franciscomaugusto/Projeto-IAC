@@ -609,7 +609,7 @@ derrota:        DEC     R6
 ;***************************************************
 ;perdeu- SE O RETORNO DE derrota FOR 1, LIMPA O ECRÃ
 ; ESCREVE GAME OVER NO ECRÃ, FAZ RESET A TODAS AS VARIAVEIS DE JOGO
-; ,CHAMA A FUNÇÃO LIMPA E MUDA O VALOR DE RECOMECO PARA 1
+; ,CHAMA A FUNÇÃO resetatualiza E MUDA O VALOR DE RECOMECO PARA 1
 ;***************************************************
 perdeu:         DEC     R6
                 STOR    M[R6],R1
@@ -693,7 +693,8 @@ perdeu:         DEC     R6
                 JMP     R7
 
 ;**************************************************
-;Faz reset da atualizajogotab
+;Faz reset da atualizajogotab, colocando todos os seus
+;valores a 0
 ;**************************************************
 resetatualiza:  DEC     R6
                 STOR    M[R6],R7
